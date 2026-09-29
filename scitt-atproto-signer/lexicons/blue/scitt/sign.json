@@ -1,0 +1,184 @@
+{
+  "lexicon": 1,
+  "id": "blue.scitt.sign",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Sign the request body into a SCITT Transparent Statement and a badge.blue inline attestation, and return both, together with a did:plc minted for this one request. The body is the artifact: it is signed exactly as sent, so it must be a JSON object (the inline attestation is appended to its signatures array) but its bytes are never re-encoded. The minted DID publishes the request's key as a verification method and carries a #scitt_scrapi service entry whose endpoint is the Receipt, so resolving the DID the attestation names answers both which key signed and where the transparency evidence is.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "repository": {
+            "type": "string",
+            "format": "did",
+            "description": "The repository DID the inline attestation is bound to. It is hashed into the content CID, so a signature made for one repository does not verify under another. Defaults to the DID minted for this request."
+          },
+          "subject": {
+            "type": "string",
+            "maxLength": 1024,
+            "description": "The sub claim of the Signed Statement, which correlates a collection of statements about one artifact. Defaults to the service's configured subject."
+          }
+        }
+      },
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "description": "The artifact to attest to, as a JSON object. Its bytes are the Signed Statement's payload and are signed exactly as sent."
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": [
+            "did",
+            "didPublished",
+            "didDocument",
+            "genesisOperation",
+            "repository",
+            "contentType",
+            "statement",
+            "transparentStatement",
+            "inlineSignature",
+            "contentCid",
+            "signedRecord"
+          ],
+          "properties": {
+            "did": {
+              "type": "string",
+              "format": "did",
+              "description": "The did:plc minted for this request. It is the issuer of the inline attestation and the subject of the DID document in this response."
+            },
+            "didPublished": {
+              "type": "boolean",
+              "description": "Whether the genesis operation was submitted to a PLC directory. When false the DID is resolvable by nobody but the holder of this response."
+            },
+            "didDocument": {
+              "type": "unknown",
+              "description": "The DID document for `did`: the request's public key as a verification method, and a #scitt_scrapi service entry whose endpoint is the Receipt."
+            },
+            "genesisOperation": {
+              "type": "unknown",
+              "description": "The signed genesis operation `did` is derived from, so it can be submitted to a PLC directory by whoever holds this response."
+            },
+            "repository": {
+              "type": "string",
+              "format": "did",
+              "description": "The repository the attestation was bound to."
+            },
+            "contentType": {
+              "type": "string",
+              "description": "The media type of the body, as it arrived."
+            },
+            "statement": {
+              "type": "ref",
+              "ref": "#statement",
+              "description": "The SCITT Signed Statement and the key that made it."
+            },
+            "transparentStatement": {
+              "type": "ref",
+              "ref": "#transparentStatement",
+              "description": "The Signed Statement as registered, with its Receipt attached."
+            },
+            "inlineSignature": {
+              "type": "unknown",
+              "description": "The badge.blue inline signature entry, as it appears in the signed record's signatures array."
+            },
+            "contentCid": {
+              "type": "string",
+              "format": "cid",
+              "description": "The content CID the inline signature covers: a hash over the record, the attestation metadata and the repository."
+            },
+            "signedRecord": {
+              "type": "unknown",
+              "description": "The body with the inline signature appended to its signatures array."
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "InvalidRequest",
+          "description": "The body is not a JSON object, or is empty, so nothing can be attested to."
+        },
+        {
+          "name": "InternalServerError",
+          "description": "A key could not be generated, or the service's own identity could not be read."
+        },
+        {
+          "name": "UpstreamFailure",
+          "description": "The Transparency Service could not be reached, refused the statement, or did not produce a Receipt."
+        }
+      ]
+    },
+    "statement": {
+      "type": "object",
+      "required": [
+        "issuer",
+        "key",
+        "didKey",
+        "kid",
+        "algorithm",
+        "coseSign1"
+      ],
+      "properties": {
+        "issuer": {
+          "type": "string",
+          "description": "The Signed Statement's iss claim: the did:jwk of the request's key. It is a did:jwk rather than the minted did:plc because the DID names the Receipt, which is a hash of this statement, so it cannot be inside it."
+        },
+        "key": {
+          "type": "unknown",
+          "description": "The request's public key as a JWK."
+        },
+        "kid": {
+          "type": "string",
+          "description": "The RFC 7638 thumbprint of that key, which is the COSE kid."
+        },
+        "algorithm": {
+          "type": "string",
+          "knownValues": [
+            "ES256"
+          ],
+          "description": "The COSE algorithm identifier, by name."
+        },
+        "coseSign1": {
+          "type": "string",
+          "description": "The COSE_Sign1 Signed Statement, as unpadded base64url."
+        },
+        "didKey": {
+          "type": "string",
+          "description": "The same public key as a did:key, for a verifier that cannot resolve the minted DID."
+        }
+      }
+    },
+    "transparentStatement": {
+      "type": "object",
+      "required": [
+        "entryId",
+        "location",
+        "receipt",
+        "coseSign1"
+      ],
+      "properties": {
+        "entryId": {
+          "type": "string",
+          "description": "The EntryID of the registration: unpadded base64url of the statement's SHA-256, per Section 2.4 of draft-ietf-scitt-scrapi-11."
+        },
+        "location": {
+          "type": "string",
+          "format": "uri",
+          "description": "The Receipt resource the Transparency Service named in its Location header."
+        },
+        "receipt": {
+          "type": "string",
+          "description": "The Receipt, as unpadded base64url."
+        },
+        "coseSign1": {
+          "type": "string",
+          "description": "The Signed Statement with the Receipt in its unprotected header under label 394, as unpadded base64url."
+        }
+      }
+    }
+  }
+}

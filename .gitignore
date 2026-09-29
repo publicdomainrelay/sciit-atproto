@@ -1,0 +1,3 @@
+target/
+.emulator-venv/
+.scitt-atproto-signer/

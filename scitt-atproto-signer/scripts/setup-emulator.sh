@@ -7,24 +7,20 @@
 # second implementation of the same reading of the draft, and agreement between
 # two readings is not evidence.
 #
-# The emulator lives in ../scitt-api-emulator and is installed into a virtual
-# environment beside this script's crate, so nothing outside this directory is
-# modified.
+# The emulator is installed from a GitHub zip archive pinned to a commit SHA,
+# into a virtual environment beside this crate, so nothing outside this
+# directory is modified. Set SCITT_EMULATOR_PATH to install a local checkout
+# in editable mode instead.
 #
 # Usage: scripts/setup-emulator.sh [python]
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 crate="$(dirname "$here")"
-emulator="${SCITT_EMULATOR_PATH:-$crate/../scitt-api-emulator}"
+sha="3e66d71d08c5a314f6175b7bafb1d03de770661a"
+archive="https://github.com/publicdomainrelay/scitt-api-emulator/archive/$sha.zip"
 venv="$crate/.emulator-venv"
 python="${1:-python3}"
-
-if [ ! -d "$emulator" ]; then
-    echo "no SCITT API Emulator at $emulator" >&2
-    echo "set SCITT_EMULATOR_PATH to its checkout" >&2
-    exit 1
-fi
 
 if [ ! -x "$venv/bin/python" ]; then
     echo "creating $venv"
@@ -35,7 +31,11 @@ fi
 # `setup.py` lists the emulator's own dependencies, but the entry point it
 # installs imports PyJWT, which is not among them; without it the server
 # fails at import.
-"$venv/bin/pip" install --quiet --editable "$emulator" PyJWT
+if [ -n "${SCITT_EMULATOR_PATH:-}" ]; then
+    "$venv/bin/pip" install --quiet --editable "$SCITT_EMULATOR_PATH" PyJWT
+else
+    "$venv/bin/pip" install --quiet "$archive" PyJWT
+fi
 
 "$venv/bin/python" - <<'PY'
 import flask  # noqa: F401

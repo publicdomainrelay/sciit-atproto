@@ -51,14 +51,103 @@ curl -s http://127.0.0.1:8787/xrpc/_health
 curl -s -X POST 'http://127.0.0.1:8787/xrpc/blue.scitt.sign' \
   -H 'content-type: application/json' \
   -d '{"$type":"app.bsky.feed.post","text":"hello scitt","createdAt":"2026-09-28T00:00:00.000Z"}' \
-  | jq '{did, entry: .transparentStatement.entryId, receipt: .didDocument.service[0].serviceEndpoint}'
+  | jq .
 ```
 
 ```json
 {
-  "did": "did:plc:ccfvk2stovekgflnzuyajds5",
-  "entry": "DDlkBKmZx1Z726c40PeFKIpXxbbnifrRWYcnmlT5h40",
-  "receipt": "http://127.0.0.1:8000/entries/DDlkBKmZx1Z726c40PeFKIpXxbbnifrRWYcnmlT5h40"
+  "contentCid": "bafyreih4qqvumus5owhqzqiykds3c7hfqjmdihul65yez4jazokuc24df4",
+  "contentType": "application/json",
+  "did": "did:plc:6qegb3nj6ezhovunn44voqaz",
+  "didDocument": {
+    "@context": [
+      "https://www.w3.org/ns/did/v1",
+      "https://w3id.org/security/multikey/v1"
+    ],
+    "alsoKnownAs": [],
+    "id": "did:plc:6qegb3nj6ezhovunn44voqaz",
+    "service": [
+      {
+        "id": "did:plc:6qegb3nj6ezhovunn44voqaz#scitt_scrapi",
+        "serviceEndpoint": "http://127.0.0.1:8000/entries/CKDu5qhc4DRG8Va6GfNIKPjFdEh0RAZby28an_BLvBo",
+        "type": "SCITTSCRAPI"
+      }
+    ],
+    "verificationMethod": [
+      {
+        "controller": "did:plc:6qegb3nj6ezhovunn44voqaz",
+        "id": "did:plc:6qegb3nj6ezhovunn44voqaz#atproto",
+        "publicKeyMultibase": "zDnaeV5adQbcC1EXKYLpJfVJ4xCeuodLJFEfCrGgqpKqnJsfM",
+        "type": "Multikey"
+      }
+    ]
+  },
+  "didPublished": false,
+  "genesisOperation": {
+    "alsoKnownAs": [],
+    "prev": null,
+    "rotationKeys": [
+      "did:key:zDnaeV5adQbcC1EXKYLpJfVJ4xCeuodLJFEfCrGgqpKqnJsfM"
+    ],
+    "services": {
+      "scitt_scrapi": {
+        "endpoint": "http://127.0.0.1:8000/entries/CKDu5qhc4DRG8Va6GfNIKPjFdEh0RAZby28an_BLvBo",
+        "type": "SCITTSCRAPI"
+      }
+    },
+    "sig": "tkFji-l1UZf0FI4qwJfp4IynZ6T040lHLki1wN8we7BD3y8jgQP30rFzI20mdPm21bKHHEefWltwqDST3I_M9A",
+    "type": "plc_operation",
+    "verificationMethods": {
+      "atproto": "did:key:zDnaeV5adQbcC1EXKYLpJfVJ4xCeuodLJFEfCrGgqpKqnJsfM"
+    }
+  },
+  "inlineSignature": {
+    "$type": "blue.badge.inlineSignature",
+    "cid": "bafyreih4qqvumus5owhqzqiykds3c7hfqjmdihul65yez4jazokuc24df4",
+    "issuedAt": "2026-09-30T04:57:25.331Z",
+    "issuer": "did:plc:6qegb3nj6ezhovunn44voqaz",
+    "key": "did:key:zDnaeV5adQbcC1EXKYLpJfVJ4xCeuodLJFEfCrGgqpKqnJsfM",
+    "signature": {
+      "$bytes": "AZl2mmanLzoCORWWvzG+j7cbNyJLJGTDDijc7MKUfdQKgm6GZ0ArVTMEwiyPkv/Wb55JABKomck19O1BqkJ6kw=="
+    }
+  },
+  "repository": "did:plc:6qegb3nj6ezhovunn44voqaz",
+  "signedRecord": {
+    "$type": "app.bsky.feed.post",
+    "createdAt": "2026-09-28T00:00:00.000Z",
+    "signatures": [
+      {
+        "$type": "blue.badge.inlineSignature",
+        "cid": "bafyreih4qqvumus5owhqzqiykds3c7hfqjmdihul65yez4jazokuc24df4",
+        "issuedAt": "2026-09-30T04:57:25.331Z",
+        "issuer": "did:plc:6qegb3nj6ezhovunn44voqaz",
+        "key": "did:key:zDnaeV5adQbcC1EXKYLpJfVJ4xCeuodLJFEfCrGgqpKqnJsfM",
+        "signature": {
+          "$bytes": "AZl2mmanLzoCORWWvzG+j7cbNyJLJGTDDijc7MKUfdQKgm6GZ0ArVTMEwiyPkv/Wb55JABKomck19O1BqkJ6kw=="
+        }
+      }
+    ],
+    "text": "hello scitt"
+  },
+  "statement": {
+    "algorithm": "ES256",
+    "coseSign1": "0oRZAQ6kASYDcGFwcGxpY2F0aW9uL2pzb24EWCs0RlRDS2E1LXNCNFVWNXNqUFZjajNVcFFUUmg5NGpNQk9BMU16b0RudnNJD6IBeLBkaWQ6andrOmV5SmpjbllpT2lKUUxUSTFOaUlzSW10MGVTSTZJa1ZESWl3aWVDSTZJbEpTUmpSblVteFpZbWRPWm00NGRVZERWa1JDYldSWk9UVlpaMWx2ZVhreFVFWlRjRTVVZUVWaFJFRWlMQ0o1SWpvaVJHbFRSbmR6UmpkcVRYZ3dkRWQwZG1VeVExOVhZVWwzY0daZldEbFRaR05mT1ZOMGN6ZFZZV3RqUVNKOQJ0c2NpdHQtYXRwcm90by1zaWduZXKgWFp7IiR0eXBlIjoiYXBwLmJza3kuZmVlZC5wb3N0IiwidGV4dCI6ImhlbGxvIHNjaXR0IiwiY3JlYXRlZEF0IjoiMjAyNi0wOS0yOFQwMDowMDowMC4wMDBaIn1YQF0kvTPPR1w2BvkSNfb_4_abzi3ws2nIXA-Yo-TLn00kMCkRRavlgwHAMJZwIVZTwl3z6q9NSD8Y4lR7MlOGtOI",
+    "didKey": "did:key:zDnaeV5adQbcC1EXKYLpJfVJ4xCeuodLJFEfCrGgqpKqnJsfM",
+    "issuer": "did:jwk:eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVDIiwieCI6IlJSRjRnUmxZYmdOZm44dUdDVkRCbWRZOTVZZ1lveXkxUEZTcE5UeEVhREEiLCJ5IjoiRGlTRndzRjdqTXgwdEd0dmUyQ19XYUl3cGZfWDlTZGNfOVN0czdVYWtjQSJ9",
+    "key": {
+      "crv": "P-256",
+      "kty": "EC",
+      "x": "RRF4gRlYbgNfn8uGCVDBmdY95YgYoyy1PFSpNTxEaDA",
+      "y": "DiSFwsF7jMx0tGtve2C_WaIwpf_X9Sdc_9Sts7UakcA"
+    },
+    "kid": "4FTCKa5-sB4UV5sjPVcj3UpQTRh94jMBOA1MzoDnvsI"
+  },
+  "transparentStatement": {
+    "coseSign1": "0oRZAQ6kASYDcGFwcGxpY2F0aW9uL2pzb24EWCs0RlRDS2E1LXNCNFVWNXNqUFZjajNVcFFUUmg5NGpNQk9BMU16b0RudnNJD6IBeLBkaWQ6andrOmV5SmpjbllpT2lKUUxUSTFOaUlzSW10MGVTSTZJa1ZESWl3aWVDSTZJbEpTUmpSblVteFpZbWRPWm00NGRVZERWa1JDYldSWk9UVlpaMWx2ZVhreFVFWlRjRTVVZUVWaFJFRWlMQ0o1SWpvaVJHbFRSbmR6UmpkcVRYZ3dkRWQwZG1VeVExOVhZVWwzY0daZldEbFRaR05mT1ZOMGN6ZFZZV3RqUVNKOQJ0c2NpdHQtYXRwcm90by1zaWduZXKhGQGKgVjw0oRYWKQBJgRYIBtTrgDpLAig7ttBtTAThGd2YBppKR9VqFjeZqlRmdiFD6IBdHRyYW5zcGFyZW5jeS5leGFtcGxlAnRzY2l0dC1hdHByb3RvLXNpZ25lchkBiwGhGQGMoSCBWEiDBgWCWCC2HDX5Al-_himKyVSUbd5j2ugZCXtHf5oz8sySNzM6M1ggXPwQEAXwjqyGOiPtELYmNvHC3kdNriA48MC1J3Yr4dT2WEAtilYCv6zDysIFQ3Sdrxf2vwpXmpLwpewJc0zIQRf-kiSIRXtNmspcTrSpQ5liZ9zvR0qkADDuzDP1Y2GLaWmEWFp7IiR0eXBlIjoiYXBwLmJza3kuZmVlZC5wb3N0IiwidGV4dCI6ImhlbGxvIHNjaXR0IiwiY3JlYXRlZEF0IjoiMjAyNi0wOS0yOFQwMDowMDowMC4wMDBaIn1YQF0kvTPPR1w2BvkSNfb_4_abzi3ws2nIXA-Yo-TLn00kMCkRRavlgwHAMJZwIVZTwl3z6q9NSD8Y4lR7MlOGtOI",
+    "entryId": "CKDu5qhc4DRG8Va6GfNIKPjFdEh0RAZby28an_BLvBo",
+    "location": "http://127.0.0.1:8000/entries/CKDu5qhc4DRG8Va6GfNIKPjFdEh0RAZby28an_BLvBo",
+    "receipt": "0oRYWKQBJgRYIBtTrgDpLAig7ttBtTAThGd2YBppKR9VqFjeZqlRmdiFD6IBdHRyYW5zcGFyZW5jeS5leGFtcGxlAnRzY2l0dC1hdHByb3RvLXNpZ25lchkBiwGhGQGMoSCBWEiDBgWCWCC2HDX5Al-_himKyVSUbd5j2ugZCXtHf5oz8sySNzM6M1ggXPwQEAXwjqyGOiPtELYmNvHC3kdNriA48MC1J3Yr4dT2WEAtilYCv6zDysIFQ3Sdrxf2vwpXmpLwpewJc0zIQRf-kiSIRXtNmspcTrSpQ5liZ9zvR0qkADDuzDP1Y2GLaWmE"
+  }
 }
 ```
 
@@ -181,67 +270,109 @@ curl -s -X POST 'http://127.0.0.1:8787/xrpc/blue.scitt.sign' \
 
 ## Response
 
+Every call returns one JSON object. Full output, saved for the verify step:
+
 ```sh
 curl -s -X POST 'http://127.0.0.1:8787/xrpc/blue.scitt.sign' \
   -H 'content-type: application/json' \
   -d '{"$type":"app.bsky.feed.post","text":"hello scitt"}' > /tmp/sign.json
 
-jq '{did, didPublished, repository, contentType, statement: (.statement | del(.coseSign1)), contentCid}' /tmp/sign.json
+jq . /tmp/sign.json
 ```
 
 ```json
 {
-  "did": "did:plc:i7qf4mqosmx65siwoebmi5rp",
-  "didPublished": false,
-  "repository": "did:plc:i7qf4mqosmx65siwoebmi5rp",
+  "contentCid": "bafyreig2bkrsvb2hohqwwlv6l7jaapiaeapqxwzr2zxyitgucperrtpeum",
   "contentType": "application/json",
+  "did": "did:plc:cgk4ys3qtoubg3btlfg7iz2i",
+  "didDocument": {
+    "@context": [
+      "https://www.w3.org/ns/did/v1",
+      "https://w3id.org/security/multikey/v1"
+    ],
+    "alsoKnownAs": [],
+    "id": "did:plc:cgk4ys3qtoubg3btlfg7iz2i",
+    "service": [
+      {
+        "id": "did:plc:cgk4ys3qtoubg3btlfg7iz2i#scitt_scrapi",
+        "serviceEndpoint": "http://127.0.0.1:8000/entries/Mysc1-qS4CfkUY6WgW42ev7XzI6r_L4lyCqOQ6zWkmQ",
+        "type": "SCITTSCRAPI"
+      }
+    ],
+    "verificationMethod": [
+      {
+        "controller": "did:plc:cgk4ys3qtoubg3btlfg7iz2i",
+        "id": "did:plc:cgk4ys3qtoubg3btlfg7iz2i#atproto",
+        "publicKeyMultibase": "zDnaeydns3BxPfXXsa8eB8AUQif9KUsi6gyrXSbPM59N57ds3",
+        "type": "Multikey"
+      }
+    ]
+  },
+  "didPublished": false,
+  "genesisOperation": {
+    "alsoKnownAs": [],
+    "prev": null,
+    "rotationKeys": [
+      "did:key:zDnaeydns3BxPfXXsa8eB8AUQif9KUsi6gyrXSbPM59N57ds3"
+    ],
+    "services": {
+      "scitt_scrapi": {
+        "endpoint": "http://127.0.0.1:8000/entries/Mysc1-qS4CfkUY6WgW42ev7XzI6r_L4lyCqOQ6zWkmQ",
+        "type": "SCITTSCRAPI"
+      }
+    },
+    "sig": "geJnMNXiaPljjN1Tp1A_B1gWCdUMeK8PJOZ8ju18jsUp2FomW47IDfUDsGy6fpqp2K_O2Sn4YaGVP2puFbZMow",
+    "type": "plc_operation",
+    "verificationMethods": {
+      "atproto": "did:key:zDnaeydns3BxPfXXsa8eB8AUQif9KUsi6gyrXSbPM59N57ds3"
+    }
+  },
+  "inlineSignature": {
+    "$type": "blue.badge.inlineSignature",
+    "cid": "bafyreig2bkrsvb2hohqwwlv6l7jaapiaeapqxwzr2zxyitgucperrtpeum",
+    "issuedAt": "2026-09-30T04:57:25.336Z",
+    "issuer": "did:plc:cgk4ys3qtoubg3btlfg7iz2i",
+    "key": "did:key:zDnaeydns3BxPfXXsa8eB8AUQif9KUsi6gyrXSbPM59N57ds3",
+    "signature": {
+      "$bytes": "GR8hnsLUdVv046zOrwqskYeRuV1N/TBoTLVPtDPePtsV2POjZ+fdWyMXP2nEX1QozJEgN6I2uLaSxzqHYpHXiw=="
+    }
+  },
+  "repository": "did:plc:cgk4ys3qtoubg3btlfg7iz2i",
+  "signedRecord": {
+    "$type": "app.bsky.feed.post",
+    "signatures": [
+      {
+        "$type": "blue.badge.inlineSignature",
+        "cid": "bafyreig2bkrsvb2hohqwwlv6l7jaapiaeapqxwzr2zxyitgucperrtpeum",
+        "issuedAt": "2026-09-30T04:57:25.336Z",
+        "issuer": "did:plc:cgk4ys3qtoubg3btlfg7iz2i",
+        "key": "did:key:zDnaeydns3BxPfXXsa8eB8AUQif9KUsi6gyrXSbPM59N57ds3",
+        "signature": {
+          "$bytes": "GR8hnsLUdVv046zOrwqskYeRuV1N/TBoTLVPtDPePtsV2POjZ+fdWyMXP2nEX1QozJEgN6I2uLaSxzqHYpHXiw=="
+        }
+      }
+    ],
+    "text": "hello scitt"
+  },
   "statement": {
     "algorithm": "ES256",
-    "didKey": "did:key:zDnaeZPzVoJBTK4GPvrSujE7vr4nRNmvGz8cq7BvaF5YkZLFv",
-    "issuer": "did:jwk:eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVDIiwieCI6ImhUZXBXeENzbjE1eTNmdlJaX2syVU5tcmphWHY0TE5scl9XazNmeE5PUjAiLCJ5IjoieEY2Q1ZnTjNBOHdTYkwtUXpQNEdQc2k3a2hyYW8zYnlRc2UtVG1acjRFUSJ9",
+    "coseSign1": "0oRZAQ6kASYDcGFwcGxpY2F0aW9uL2pzb24EWCtmcGhWY3RhTURSZTYtbE81Q0FmMjRjQlRNdFE0YUpNV2dadzBCc0ZlY2hjD6IBeLBkaWQ6andrOmV5SmpjbllpT2lKUUxUSTFOaUlzSW10MGVTSTZJa1ZESWl3aWVDSTZJamRXYTJZM1pUZEtVV041WjJjeGJrbEpWVmRGYVhSRWN6TndTM1pWVkZVM2R6QXdkbk14Umxaa04xa2lMQ0o1SWpvaU1reEtRbGRXWmpGVFgxazRkM1pJZEVFMVFreFRVRWxvZURkNlpqQm5hak5GTmpNeFJVUlFRMjVqWXlKOQJ0c2NpdHQtYXRwcm90by1zaWduZXKgWDN7IiR0eXBlIjoiYXBwLmJza3kuZmVlZC5wb3N0IiwidGV4dCI6ImhlbGxvIHNjaXR0In1YQNPG8mv6wepOYokUm7UtyOWH7nx7aD0ZK0Vrv1n5A0OlPccX-iwKlNOVZEqiwfkL95R8tEsNhV9RXoRwYg3J8tU",
+    "didKey": "did:key:zDnaeydns3BxPfXXsa8eB8AUQif9KUsi6gyrXSbPM59N57ds3",
+    "issuer": "did:jwk:eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVDIiwieCI6IjdWa2Y3ZTdKUWN5Z2cxbklJVVdFaXREczNwS3ZVVFU3dzAwdnMxRlZkN1kiLCJ5IjoiMkxKQldWZjFTX1k4d3ZIdEE1QkxTUEloeDd6ZjBnajNFNjMxRURQQ25jYyJ9",
     "key": {
       "crv": "P-256",
       "kty": "EC",
-      "x": "hTepWxCsn15y3fvRZ_k2UNmrjaXv4LNlr_Wk3fxNOR0",
-      "y": "xF6CVgN3A8wSbL-QzP4GPsi7khrao3byQse-TmZr4EQ"
+      "x": "7Vkf7e7JQcygg1nIIUWEitDs3pKvUTU7w00vs1FVd7Y",
+      "y": "2LJBWVf1S_Y8wvHtA5BLSPIhx7zf0gj3E631EDPCncc"
     },
-    "kid": "tMYinGg3eXgOnChs9bkpCYJ6YM1C3qHPMSj3c7pMV1Y"
+    "kid": "fphVctaMDRe6-lO5CAf24cBTMtQ4aJMWgZw0BsFechc"
   },
-  "contentCid": "bafyreifpkveuw4xjpuz6v2omvxbr5jt76pphki5bd7ny46bziyefvsumaa"
-}
-```
-
-Other top-level keys: `didDocument`, `genesisOperation`, `inlineSignature`, `signedRecord`, `transparentStatement` (`entryId`, `location`, `receipt`, `coseSign1`). Full shape: `lexicons/blue/scitt/sign.json`.
-
-The minted DID document:
-
-```sh
-jq '.didDocument' /tmp/sign.json
-```
-
-```json
-{
-  "@context": [
-    "https://www.w3.org/ns/did/v1",
-    "https://w3id.org/security/multikey/v1"
-  ],
-  "alsoKnownAs": [],
-  "id": "did:plc:i7qf4mqosmx65siwoebmi5rp",
-  "service": [
-    {
-      "id": "did:plc:i7qf4mqosmx65siwoebmi5rp#scitt_scrapi",
-      "serviceEndpoint": "http://127.0.0.1:8000/entries/_Ll1IidR5NqM49b4uVNeQgK-0a_Oyf43jxEfS_Qd4m4",
-      "type": "SCITTSCRAPI"
-    }
-  ],
-  "verificationMethod": [
-    {
-      "controller": "did:plc:i7qf4mqosmx65siwoebmi5rp",
-      "id": "did:plc:i7qf4mqosmx65siwoebmi5rp#atproto",
-      "publicKeyMultibase": "zDnaeZPzVoJBTK4GPvrSujE7vr4nRNmvGz8cq7BvaF5YkZLFv",
-      "type": "Multikey"
-    }
-  ]
+  "transparentStatement": {
+    "coseSign1": "0oRZAQ6kASYDcGFwcGxpY2F0aW9uL2pzb24EWCtmcGhWY3RhTURSZTYtbE81Q0FmMjRjQlRNdFE0YUpNV2dadzBCc0ZlY2hjD6IBeLBkaWQ6andrOmV5SmpjbllpT2lKUUxUSTFOaUlzSW10MGVTSTZJa1ZESWl3aWVDSTZJamRXYTJZM1pUZEtVV041WjJjeGJrbEpWVmRGYVhSRWN6TndTM1pWVkZVM2R6QXdkbk14Umxaa04xa2lMQ0o1SWpvaU1reEtRbGRXWmpGVFgxazRkM1pJZEVFMVFreFRVRWxvZURkNlpqQm5hak5GTmpNeFJVUlFRMjVqWXlKOQJ0c2NpdHQtYXRwcm90by1zaWduZXKhGQGKgVjw0oRYWKQBJgRYIBtTrgDpLAig7ttBtTAThGd2YBppKR9VqFjeZqlRmdiFD6IBdHRyYW5zcGFyZW5jeS5leGFtcGxlAnRzY2l0dC1hdHByb3RvLXNpZ25lchkBiwGhGQGMoSCBWEiDBwaCWCBV373A49lLcqtoZ91MO1br_x3Xw9aszrrHYyF-HdKjpVggXPwQEAXwjqyGOiPtELYmNvHC3kdNriA48MC1J3Yr4dT2WEAx_Z40mgqt7O6zXdMSUEO7GIiCLd4qHkIDN3MsQJGSQZ7rdndJFvYfYV8bWcpEMc-gwWozQc1DYJ2-q1KYCiAxWDN7IiR0eXBlIjoiYXBwLmJza3kuZmVlZC5wb3N0IiwidGV4dCI6ImhlbGxvIHNjaXR0In1YQNPG8mv6wepOYokUm7UtyOWH7nx7aD0ZK0Vrv1n5A0OlPccX-iwKlNOVZEqiwfkL95R8tEsNhV9RXoRwYg3J8tU",
+    "entryId": "Mysc1-qS4CfkUY6WgW42ev7XzI6r_L4lyCqOQ6zWkmQ",
+    "location": "http://127.0.0.1:8000/entries/Mysc1-qS4CfkUY6WgW42ev7XzI6r_L4lyCqOQ6zWkmQ",
+    "receipt": "0oRYWKQBJgRYIBtTrgDpLAig7ttBtTAThGd2YBppKR9VqFjeZqlRmdiFD6IBdHRyYW5zcGFyZW5jeS5leGFtcGxlAnRzY2l0dC1hdHByb3RvLXNpZ25lchkBiwGhGQGMoSCBWEiDBwaCWCBV373A49lLcqtoZ91MO1br_x3Xw9aszrrHYyF-HdKjpVggXPwQEAXwjqyGOiPtELYmNvHC3kdNriA48MC1J3Yr4dT2WEAx_Z40mgqt7O6zXdMSUEO7GIiCLd4qHkIDN3MsQJGSQZ7rdndJFvYfYV8bWcpEMc-gwWozQc1DYJ2-q1KYCiAx"
+  }
 }
 ```
 
@@ -256,16 +387,55 @@ Python verifier. No code from this crate. Checks COSE signature, Merkle inclusio
 
 ```console
 1. structure
+  [ok  ] the transparent statement decodes as COSE_Sign1
+  [ok  ] its payload is the request body, byte for byte -- 51 bytes
+  [ok  ] it carries receipts under label 394
+  [ok  ] the receipt in the header is the one the service returned
+  [ok  ] the protected header is unchanged by the receipt
+  [ok  ] the payload is unchanged by the receipt
 2. the statement's own signature
+  [ok  ] the protected header carries CWT claims
+  [ok  ] the issuer is a did:jwk -- did:jwk:eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVD...
+  [ok  ] the issuer's key resolves
+  [ok  ] the kid names that key
+  [ok  ] the statement's signature verifies
 3. the receipt proves this statement is in the log
+  [ok  ] the receipt is a tag-18 COSE_Sign1
+  [ok  ] the receipt's payload is detached
+  [ok  ] the receipt carries proofs under label 396
+  [ok  ] the receipt carries at least one inclusion proof
+  [ok  ] the leaf is over the statement as registered
+  [ok  ] the proof names a leaf inside the tree -- leaf 6 of 7
+  [ok  ] every inclusion proof reconstructs a 32-byte root
+  [ok  ] the receipt names a kid
+  [ok  ] the service publishes a COSE Key Set
+  [ok  ] the receipt's kid is in the published key set
+  [ok  ] exactly one inclusion proof yields the root the receipt signed -- 1 of 1 matched
 4. the receipt names the statement that was registered
+  [ok  ] the receipt carries CWT claims
+  [ok  ] the receipt's subject is the statement's subject -- scitt-atproto-signer
 5. the badge.blue inline signature
+  [ok  ] the record carries exactly one signature
+  [ok  ] the content CID recomputes from the record, the metadata and the repository -- bafyreig2bkrsvb2hohqwwlv6l7jaapiaeapqxwzr2zxyitgucperrtpeum
+  [ok  ] the response reports the same content CID
+  [ok  ] the key is a did:key this verifier can decode
+  [ok  ] the issuer's document publishes a verification method
+  [ok  ] that method is the key the attestation names
+  [ok  ] the signature is a 64-byte P-256 signature
+  [ok  ] the inline signature verifies over the content CID
 6. the DID resolves to the key and to the receipt
+   (this is what a reader of the attestation does: resolve the DID)
+  [ok  ] the attestation is issued by that DID
+  [ok  ] the document is that DID's own
+  [ok  ] the identifier is the hash of the genesis operation it reports -- did:plc:cgk4ys3qtoubg3btlfg7iz2i derived, did:plc:cgk4ys3qtoubg3btlfg7iz2i reported
+  [ok  ] the document carries one service entry
+  [ok  ] its id is #scitt_scrapi
+  [ok  ] its type is SCITTSCRAPI
+  [ok  ] its endpoint is the Receipt this response reports
+  [ok  ] its endpoint names the EntryID that was registered
 
 all checks passed
 ```
-
-(Output above shows section headings only. Each section prints `[ok  ]` per check.)
 
 Check the inline signature with the Rust CLI:
 
@@ -281,7 +451,7 @@ atproto-attestation-verify /tmp/record.json "$REPOSITORY"
 ```
 
 ```text
-✓ [0] inline blue.badge.inlineSignature key did:key:zDnaeZPzVoJBTK4GPvrSujE7vr4nRNmvGz8cq7BvaF5YkZLFv issuer did:plc:i7qf4mqosmx65siwoebmi5rp
+✓ [0] inline blue.badge.inlineSignature key did:key:zDnaeydns3BxPfXXsa8eB8AUQif9KUsi6gyrXSbPM59N57ds3 issuer did:plc:cgk4ys3qtoubg3btlfg7iz2i
 1 of 1 attestations verified.
 ```
 

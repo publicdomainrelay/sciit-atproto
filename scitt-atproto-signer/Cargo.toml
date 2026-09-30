@@ -19,9 +19,9 @@ path = "src/main.rs"
 [dependencies]
 anyhow = "1.0"
 async-trait = "0.1"
-atproto-attestation = { path = "../atproto-crates/crates/atproto-attestation" }
-atproto-identity = { path = "../atproto-crates/crates/atproto-identity" }
-atproto-record = { path = "../atproto-crates/crates/atproto-record" }
+atproto-attestation = { git = "https://tangled.org/ngerakines.me/atproto-crates", rev = "242693e1956e4f96659846194154c97ecbe60d72" }
+atproto-identity = { git = "https://tangled.org/ngerakines.me/atproto-crates", rev = "242693e1956e4f96659846194154c97ecbe60d72" }
+atproto-record = { git = "https://tangled.org/ngerakines.me/atproto-crates", rev = "242693e1956e4f96659846194154c97ecbe60d72" }
 axum = { version = "0.8", features = ["macros"] }
 clap = { version = "4.5", features = ["derive", "env"] }
 p256 = { version = "0.14", features = ["ecdsa"] }

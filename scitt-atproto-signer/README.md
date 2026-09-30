@@ -7,14 +7,7 @@ a `did:plc` with a `#scitt_scrapi` service entry whose endpoint is the
 
 ## Setup
 
-Sibling checkouts needed (`atproto-crates` pins Rust 1.97):
-
-```
-scitt-atproto/
-|-- atproto-crates/
-|-- scitt-api-emulator/
-`-- scitt-atproto-signer/
-```
+Needs Rust 1.97 (`rust-toolchain.toml` makes `rustup` fetch it). The `atproto-*` crates are git dependencies pinned to a commit, so no sibling checkouts are needed.
 
 Start a Transparency Service ([SCITT API Emulator]):
 
@@ -280,9 +273,11 @@ Check the inline signature with the Rust CLI:
 jq -r '.signedRecord' /tmp/sign.json > /tmp/record.json
 REPOSITORY=$(jq -r .repository /tmp/sign.json)
 
-cargo +1.97 run -q --manifest-path ../atproto-crates/Cargo.toml \
-  -p atproto-attestation --features clap,tokio \
-  --bin atproto-attestation-verify -- /tmp/record.json "$REPOSITORY"
+cargo install --git https://tangled.org/ngerakines.me/atproto-crates \
+  --rev 242693e1956e4f96659846194154c97ecbe60d72 \
+  atproto-attestation --features clap,tokio --bin atproto-attestation-verify
+
+atproto-attestation-verify /tmp/record.json "$REPOSITORY"
 ```
 
 ```text

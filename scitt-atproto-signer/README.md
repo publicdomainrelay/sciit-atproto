@@ -1,12 +1,9 @@
 # scitt-atproto-signer
 
-XRPC service. Signs the request body as-is. Returns:
-
-* SCITT **Transparent Statement** (`COSE_Sign1`, `did:jwk` issuer, one fresh P-256 key per request, registered via [SCRAPI])
-* [badge.blue] **inline attestation**
-* a `did:plc` minted per request. Its DID document holds the key and a `#scitt_scrapi` service entry whose endpoint is the Receipt.
-
-Body must be a JSON object. Other bodies get `400`.
+XRPC service that creates a [badge.blue](https://badge.blue) signature over the
+JSON request body and returns an `inlineSignature` object where the `issuer` is
+a `did:plc` with a `#scitt_scrapi` service entry whose endpoint is the
+[transparent statement](https://www.rfc-editor.org/info/rfc9943/#section-7).
 
 ## Setup
 
@@ -78,14 +75,102 @@ With [`goat`]:
 
 ```sh
 goat xrpc procedure http://127.0.0.1:8787 blue.scitt.sign \
-  '$type=app.bsky.feed.post' 'text=hello from goat' \
-  | jq '{entry: .transparentStatement.entryId, cid: .contentCid}'
+  '$type=app.bsky.feed.post' 'text=hello from goat'
 ```
 
 ```json
 {
-  "entry": "bwyl32IE86iZYx-dAdVzQeCDSN12T65jqI5X9eAUlO8",
-  "cid": "bafyreie5bmwtnh4lwkbp7ieluxcmwujcwzyr2o4szr5xl7twb3m4rnmz7y"
+  "contentCid": "bafyreihc6twroalkon3vvoiptdfc5ngo7nv74lbwpcvzrddeicw45bipou",
+  "contentType": "application/json",
+  "did": "did:plc:iec6bspw6ctfbxhrdi4or275",
+  "didDocument": {
+    "@context": [
+      "https://www.w3.org/ns/did/v1",
+      "https://w3id.org/security/multikey/v1"
+    ],
+    "alsoKnownAs": [],
+    "id": "did:plc:iec6bspw6ctfbxhrdi4or275",
+    "service": [
+      {
+        "id": "did:plc:iec6bspw6ctfbxhrdi4or275#scitt_scrapi",
+        "serviceEndpoint": "http://127.0.0.1:8000/entries/dQFAHH-BizRa8wOxFcHrDgqzT0YQnW-KixBueL5g1Xo",
+        "type": "SCITTSCRAPI"
+      }
+    ],
+    "verificationMethod": [
+      {
+        "controller": "did:plc:iec6bspw6ctfbxhrdi4or275",
+        "id": "did:plc:iec6bspw6ctfbxhrdi4or275#atproto",
+        "publicKeyMultibase": "zDnaefWRXyXd3xqMRpV9B1WFHBThngbw5GLTc1KwYUvDowNfE",
+        "type": "Multikey"
+      }
+    ]
+  },
+  "didPublished": false,
+  "genesisOperation": {
+    "alsoKnownAs": [],
+    "prev": null,
+    "rotationKeys": [
+      "did:key:zDnaefWRXyXd3xqMRpV9B1WFHBThngbw5GLTc1KwYUvDowNfE"
+    ],
+    "services": {
+      "scitt_scrapi": {
+        "endpoint": "http://127.0.0.1:8000/entries/dQFAHH-BizRa8wOxFcHrDgqzT0YQnW-KixBueL5g1Xo",
+        "type": "SCITTSCRAPI"
+      }
+    },
+    "sig": "PN03lT5pv6LfeRGb87mZkWpbYQkuWlJKrBCXl9tz0zF3r9RCqYpqH55hLhygwiiFk8wamWV3m_XziA04H0MQUA",
+    "type": "plc_operation",
+    "verificationMethods": {
+      "atproto": "did:key:zDnaefWRXyXd3xqMRpV9B1WFHBThngbw5GLTc1KwYUvDowNfE"
+    }
+  },
+  "inlineSignature": {
+    "$type": "blue.badge.inlineSignature",
+    "cid": "bafyreihc6twroalkon3vvoiptdfc5ngo7nv74lbwpcvzrddeicw45bipou",
+    "issuedAt": "2026-09-30T04:50:15.184Z",
+    "issuer": "did:plc:iec6bspw6ctfbxhrdi4or275",
+    "key": "did:key:zDnaefWRXyXd3xqMRpV9B1WFHBThngbw5GLTc1KwYUvDowNfE",
+    "signature": {
+      "$bytes": "u+b+Ib2+g5NCa35UiGfYkQGBuBiGH4MMdHNuC5IOZTlT/BzR2qo6C5MA1TgQKb+i27GRcv25MAfLRJaVRmOJUg=="
+    }
+  },
+  "repository": "did:plc:iec6bspw6ctfbxhrdi4or275",
+  "signedRecord": {
+    "$type": "app.bsky.feed.post",
+    "signatures": [
+      {
+        "$type": "blue.badge.inlineSignature",
+        "cid": "bafyreihc6twroalkon3vvoiptdfc5ngo7nv74lbwpcvzrddeicw45bipou",
+        "issuedAt": "2026-09-30T04:50:15.184Z",
+        "issuer": "did:plc:iec6bspw6ctfbxhrdi4or275",
+        "key": "did:key:zDnaefWRXyXd3xqMRpV9B1WFHBThngbw5GLTc1KwYUvDowNfE",
+        "signature": {
+          "$bytes": "u+b+Ib2+g5NCa35UiGfYkQGBuBiGH4MMdHNuC5IOZTlT/BzR2qo6C5MA1TgQKb+i27GRcv25MAfLRJaVRmOJUg=="
+        }
+      }
+    ],
+    "text": "hello from goat"
+  },
+  "statement": {
+    "algorithm": "ES256",
+    "coseSign1": "0oRZAQ6kASYDcGFwcGxpY2F0aW9uL2pzb24EWCs2T0NIbVd1dW1wRDExb2Y1UVItR0c5ektRRktNZFp0amhHWUwxemRnYk1VD6IBeLBkaWQ6andrOmV5SmpjbllpT2lKUUxUSTFOaUlzSW10MGVTSTZJa1ZESWl3aWVDSTZJalJCVDFRNWJFdHVXRkpyU0hwdVNURjNlamxTYTFWUVVuZE1NR3BFVTJkalpEZFJPVkk0YWpFeGVUQWlMQ0o1SWpvaWIxaEVTWGcyZVhSZlExRTNjV3RsVDNOR1lucHVkREpQYm00MWVubEdWRGxOYkY5aFRESm5ja3RCTkNKOQJ0c2NpdHQtYXRwcm90by1zaWduZXKgWDd7IiR0eXBlIjoiYXBwLmJza3kuZmVlZC5wb3N0IiwidGV4dCI6ImhlbGxvIGZyb20gZ29hdCJ9WEAhBuz7MPOjSzRPcxdN8O7XETaaTg-SBAZmXnE-K0IFgQKbrJvtUeZ0kf-IM4LEha5KuXpVD9MySjZcrsGDR3rU",
+    "didKey": "did:key:zDnaefWRXyXd3xqMRpV9B1WFHBThngbw5GLTc1KwYUvDowNfE",
+    "issuer": "did:jwk:eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVDIiwieCI6IjRBT1Q5bEtuWFJrSHpuSTF3ejlSa1VQUndMMGpEU2djZDdROVI4ajExeTAiLCJ5Ijoib1hESXg2eXRfQ1E3cWtlT3NGYnpudDJPbm41enlGVDlNbF9hTDJncktBNCJ9",
+    "key": {
+      "crv": "P-256",
+      "kty": "EC",
+      "x": "4AOT9lKnXRkHznI1wz9RkUPRwL0jDSgcd7Q9R8j11y0",
+      "y": "oXDIx6yt_CQ7qkeOsFbznt2Onn5zyFT9Ml_aL2grKA4"
+    },
+    "kid": "6OCHmWuumpD11of5QR-GG9zKQFKMdZtjhGYL1zdgbMU"
+  },
+  "transparentStatement": {
+    "coseSign1": "0oRZAQ6kASYDcGFwcGxpY2F0aW9uL2pzb24EWCs2T0NIbVd1dW1wRDExb2Y1UVItR0c5ektRRktNZFp0amhHWUwxemRnYk1VD6IBeLBkaWQ6andrOmV5SmpjbllpT2lKUUxUSTFOaUlzSW10MGVTSTZJa1ZESWl3aWVDSTZJalJCVDFRNWJFdHVXRkpyU0hwdVNURjNlamxTYTFWUVVuZE1NR3BFVTJkalpEZFJPVkk0YWpFeGVUQWlMQ0o1SWpvaWIxaEVTWGcyZVhSZlExRTNjV3RsVDNOR1lucHVkREpQYm00MWVubEdWRGxOYkY5aFRESm5ja3RCTkNKOQJ0c2NpdHQtYXRwcm90by1zaWduZXKhGQGKgVjO0oRYWKQBJgRYIBtTrgDpLAig7ttBtTAThGd2YBppKR9VqFjeZqlRmdiFD6IBdHRyYW5zcGFyZW5jeS5leGFtcGxlAnRzY2l0dC1hdHByb3RvLXNpZ25lchkBiwGhGQGMoSCBWCaDBQSBWCBc_BAQBfCOrIY6I-0QtiY28cLeR02uIDjwwLUndivh1PZYQCkSVysec4AaBoYR3Kt98MVXCZ1aIk4dR21MhwxadcEgD7gHPblvyOB4jChdse--QDBPOKcaT9b1L1ebOCo7Q2FYN3siJHR5cGUiOiJhcHAuYnNreS5mZWVkLnBvc3QiLCJ0ZXh0IjoiaGVsbG8gZnJvbSBnb2F0In1YQCEG7Psw86NLNE9zF03w7tcRNppOD5IEBmZecT4rQgWBApusm-1R5nSR_4gzgsSFrkq5elUP0zJKNlyuwYNHetQ",
+    "entryId": "dQFAHH-BizRa8wOxFcHrDgqzT0YQnW-KixBueL5g1Xo",
+    "location": "http://127.0.0.1:8000/entries/dQFAHH-BizRa8wOxFcHrDgqzT0YQnW-KixBueL5g1Xo",
+    "receipt": "0oRYWKQBJgRYIBtTrgDpLAig7ttBtTAThGd2YBppKR9VqFjeZqlRmdiFD6IBdHRyYW5zcGFyZW5jeS5leGFtcGxlAnRzY2l0dC1hdHByb3RvLXNpZ25lchkBiwGhGQGMoSCBWCaDBQSBWCBc_BAQBfCOrIY6I-0QtiY28cLeR02uIDjwwLUndivh1PZYQCkSVysec4AaBoYR3Kt98MVXCZ1aIk4dR21MhwxadcEgD7gHPblvyOB4jChdse--QDBPOKcaT9b1L1ebOCo7Q2E"
+  }
 }
 ```
 
